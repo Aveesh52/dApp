@@ -1,5 +1,5 @@
 {
-    "name": "1inch-exchange",
+    "name": "1x-ag",
     "version": "1.0.0",
     "scripts": {
         "sm:test": "scripts/test.sh",

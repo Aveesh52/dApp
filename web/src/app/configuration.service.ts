@@ -12,6 +12,7 @@ export class ConfigurationService {
     public ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
     public ETHDAI2x = '0x7778d1011e19C0091C930d4BEfA2B0e47441562A';
+    public DAIETH2x = '0x0b05ba1c72325b11b5553216c9e57257f82b71d8';
     public HOLDER_ONE_AAVE_COMPOUND = '0x96930e5BBaa0A53019f601C6c5E2563c910988fd';
 
     public CONTRACT_ENS = '1xAggregator.eth';

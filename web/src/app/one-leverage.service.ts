@@ -13,6 +13,7 @@ import { ethers } from 'ethers';
 export class OneLeverageService {
 
     holderOneAaveCompoundContract;
+    client;
 
     constructor(
         protected web3Service: Web3Service,
@@ -23,6 +24,11 @@ export class OneLeverageService {
     }
 
     async init() {
+
+        // this.client = new ApolloClient({
+        //     // @ts-ignore
+        //     uri: 'https://api.thegraph.com/subgraphs/name/cryptomaniacszone/onexag'
+        // });
 
         this.holderOneAaveCompoundContract = new (await this.web3Service.getWeb3Provider()).eth.Contract(
             // @ts-ignore
@@ -41,6 +47,14 @@ export class OneLeverageService {
                     // @ts-ignore
                     OneLeverageABI,
                     this.configurationService.ETHDAI2x
+                );
+
+            case '2xDAIETH':
+
+                return new (await this.web3Service.getWeb3Provider()).eth.Contract(
+                    // @ts-ignore
+                    OneLeverageABI,
+                    this.configurationService.DAIETH2x
                 );
         }
     }

@@ -33,6 +33,7 @@ jobs:
 
       - name: Build
         run: |
+          cd web
           yarn run build
           echo "1x.ag" > ./web/dist/web/CNAME
           node jobs/upload-ipfs.js

@@ -26,7 +26,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: yarn ci
       #
       #      - name: Test
       #        run: |

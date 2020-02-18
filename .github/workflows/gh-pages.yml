@@ -39,7 +39,7 @@ jobs:
         run: |
           cd web
           yarn run build
-          echo "1x.ag" > ./web/dist/web/CNAME
+          echo "1x.ag" > ./dist/web/CNAME
           node jobs/upload-ipfs.js
 
       - name: Prepare tag

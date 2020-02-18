@@ -26,7 +26,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-
       - name: Install
         run: |
           cd web && yarn install --frozen-lockfile

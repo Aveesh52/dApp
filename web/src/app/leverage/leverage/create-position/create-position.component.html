@@ -14,6 +14,11 @@
             <app-loading-spinner *ngIf="loading"></app-loading-spinner>
 
             <div *ngIf="!loading">
+
+                <ngb-alert (close)="warning = false" *ngIf="warning" class="mb-3" type="warning">
+                    ⚠️ Leverage aggregator is in alpha state right now. Use at your own risk.
+                </ngb-alert>
+
                 <div *ngIf="done || error" class="mb-3">
 
                     <ngb-alert (close)="done = false" *ngIf="done" class="mb-1" type="success">

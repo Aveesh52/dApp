@@ -63,6 +63,7 @@ export class CreatePositionComponent implements OnInit {
     transactionHash = '';
     error = false;
     done = false;
+    warning = true;
 
     leverageProvider = localStorage.getItem('leverageProvider') ?
         this.leverageProviders.filter(provider => provider.name ===

@@ -28,6 +28,7 @@ jobs:
 
       - name: Install
         run: |
+          yarn install --frozen-lockfile
           cd web && yarn install --frozen-lockfile
 
       #

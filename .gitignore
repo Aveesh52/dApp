@@ -5,5 +5,4 @@ coverage.json
 .idea
 build
 .outputParameter
-sdk/lambda-dist
-sdk/dist
+web/dist

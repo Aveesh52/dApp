@@ -6,6 +6,8 @@ import HolderOneABI from './abi/HolderOneABI.json';
 import { ConfigurationService } from './configuration.service';
 import { BigNumber } from 'ethers/utils/bignumber';
 import { ethers } from 'ethers';
+import { ApolloClient } from 'apollo-client';
+import { gql, HttpLink, InMemoryCache } from 'apollo-boost';
 
 @Injectable({
     providedIn: 'root'
@@ -25,10 +27,15 @@ export class OneLeverageService {
 
     async init() {
 
-        // this.client = new ApolloClient({
-        //     // @ts-ignore
-        //     uri: 'https://api.thegraph.com/subgraphs/name/cryptomaniacszone/onexag'
-        // });
+        const cache = new InMemoryCache();
+        const link = new HttpLink({
+            uri: 'https://api.thegraph.com/subgraphs/name/deacix/onexag'
+        });
+
+        this.client = new ApolloClient({
+            cache,
+            link
+        });
 
         this.holderOneAaveCompoundContract = new (await this.web3Service.getWeb3Provider()).eth.Contract(
             // @ts-ignore
@@ -123,5 +130,69 @@ export class OneLeverageService {
                     reject(err);
                 });
         });
+    }
+
+    async getOpenPositions(
+        walletAddress: string,
+        first: number = 100,
+        skip: number = 0
+    ) {
+
+        const response = await this.client.query({
+            query: gql`
+                query {
+                    positions(
+                        where: {
+                            owner:"${walletAddress}"
+                            closed: false
+                        }
+                        first: ${first}
+                        skip: ${skip}
+                    ) {
+                        id
+                        contract
+                        owner
+                        amount
+                        stopLoss
+                        takeProfit
+                        closed
+                    }
+                }
+            `
+        });
+
+        return response['data']['positions'];
+    }
+
+    async getClosedPositions(
+        walletAddress: string,
+        first: number = 100,
+        skip: number = 0
+    ) {
+
+        const response = await this.client.query({
+            query: gql`
+                query {
+                    positions(
+                        where: {
+                            owner:"${walletAddress}"
+                            closed: true
+                        }
+                        first: ${first}
+                        skip: ${skip}
+                    ) {
+                        id
+                        contract
+                        owner
+                        amount
+                        stopLoss
+                        takeProfit
+                        closed
+                    }
+                }
+            `
+        });
+
+        return response['data']['positions'];
     }
 }

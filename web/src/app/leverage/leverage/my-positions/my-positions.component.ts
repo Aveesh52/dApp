@@ -1,7 +1,9 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { LeverageChartDialogComponent } from '../leverage-chart-dialog/leverage-chart-dialog.component';
 import { mockedPositions } from './mocked-positions';
+import { OneLeverageService } from '../../../one-leverage.service';
+import { Web3Service } from '../../../web3.service';
 
 export interface IPosition {
     assetAmount: number;
@@ -12,7 +14,7 @@ export interface IPosition {
     stopLossUsd: number;
     stopWinUsd: number;
     leverage: number;
-    ratesHistory: Array<{rate: number, t: string}>;
+    ratesHistory: Array<{ rate: number, t: string }>;
 }
 
 @Component({
@@ -27,16 +29,48 @@ export class MyPositionsComponent implements OnInit {
     modalRef: BsModalRef;
     message: string;
 
-    constructor(private modalService: BsModalService) {
+    openPositions;
+    closedPositions;
+
+    constructor(
+        private modalService: BsModalService,
+        private oneLeverageService: OneLeverageService,
+        private web3Service: Web3Service
+    ) {
         //
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         // ---
+
+        setTimeout(() => {
+
+            this.web3Service.connectEvent.subscribe(value => {
+
+                this.loadPositions();
+            });
+        }, 5000);
+
+        this.loadPositions();
+    }
+
+    async loadPositions() {
+
+        this.openPositions = await this.oneLeverageService.getOpenPositions(
+            this.web3Service.walletAddress
+        );
+
+        console.log('openPositions', this.openPositions);
+
+        this.closedPositions = await this.oneLeverageService.getClosedPositions(
+            this.web3Service.walletAddress
+        );
+
+        console.log('closedPositions', this.closedPositions);
     }
 
     operate(position: any, template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template , {class: 'modal-sm'});
+        this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
 
     confirm(): void {
@@ -52,10 +86,10 @@ export class MyPositionsComponent implements OnInit {
     showChartDialog(position: IPosition) {
         const initialState: any = {
             ...position,
-            src2DstAssetRates: position.ratesHistory.map( (x) => x.rate),
+            src2DstAssetRates: position.ratesHistory.map((x) => x.rate),
             rates2Usd: position.ratesHistory
         };
         //
-        this.modalRef = this.modalService.show(LeverageChartDialogComponent, {class: 'modal-lg', initialState});
+        this.modalRef = this.modalService.show(LeverageChartDialogComponent, { class: 'modal-lg', initialState });
     }
 }
